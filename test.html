@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blur con Transparencia de Fondo</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Para que ocupe toda la altura de la ventana */
+            background-image: url('https://picsum.photos/1200/800'); /* Imagen de fondo para demostrar el blur */
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+        }
+
+        .container {
+            position: relative; /* Necesario para posicionar el div con blur */
+            width: 700px;
+            height: 450px;
+            background-color: rgba(0, 0, 0, 0.3); /* Un fondo semitransparente para el contenedor principal */
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden; /* Para que el blur no se salga de los bordes del contenedor */
+        }
+
+        .blurred-div {
+            /* Propiedades para el div que tendrá el blur */
+            background-color: rgba(255, 255, 255, 0.15); /* Fondo semitransparente blanco para el efecto "cristal" */
+            backdrop-filter: blur(10px); /* Aplica el desenfoque al fondo */
+            -webkit-backdrop-filter: blur(10px); /* Prefijo para compatibilidad con Safari */
+            border: 1px solid rgba(255, 255, 255, 0.2); /* Borde sutil */
+            border-radius: 10px; /* Bordes redondeados */
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            max-width: 80%; /* Ancho máximo dentro del contenedor */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="blurred-div">
+            <h2>Efecto de Cristal Esmerilado</h2>
+            <p>Este div utiliza <code>backdrop-filter</code> para desenfocar el contenido que está detrás de él. ¡Intenta cambiar la imagen de fondo del body para ver el efecto en acción!</p>
+            <p>El fondo de este div es semitransparente para permitir que el efecto sea visible.</p>
+        </div>
+    </div>
+</body>
+</html>
