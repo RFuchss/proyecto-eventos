@@ -301,9 +301,9 @@
         </div>
     </section>
 
-    <div class="blur-section">
+    <div class="blur-section" id="blured">
         <!-- Projects Section -->
-        <section id="projects" class="py-20 bg-white">
+        <section id="projects" class="py-20 bg-white blured">
             <div class="container mx-auto px-6">
                 <h2 class="text-3xl md:text-4xl font-bold text-center mb-16 text-gray-800 en">Featured Projects</h2>
                 <h2 class="text-3xl md:text-4xl font-bold text-center mb-16 text-gray-800 es hidden-language">Proyectos Destacados</h2>
@@ -388,7 +388,7 @@
         </section>
 
         <!-- CTA Section -->
-        <section class="py-20 bg-yellow-50">
+        <section class="py-20 bg-yellow-50 blured">
             <div class="container mx-auto text-center px-6">
                 <h2 class="text-3xl md:text-4xl font-bold mb-6 text-gray-800 en">Ready to Create Something Extraordinary?</h2>
                 <h2 class="text-3xl md:text-4xl font-bold mb-6 text-gray-800 es hidden-language">¿Listo para Crear Algo Extraordinario?</h2>
@@ -413,7 +413,7 @@
         </section>
 
         <!-- Contact Section -->
-        <section id="contact" class="py-20 bg-gray-800 text-white">
+        <section id="contact" class="py-20 bg-gray-800 text-white blured">
             <div class="container mx-auto px-6">
                 <h2 class="text-3xl md:text-4xl font-bold text-center mb-16 en">Get In Touch</h2>
                 <h2 class="text-3xl md:text-4xl font-bold text-center mb-16 es hidden-language">Contáctanos</h2>
@@ -535,7 +535,7 @@
         </section>
 
         <!-- Footer -->
-        <footer class="bg-black text-white py-12">
+        <footer class="bg-black text-white py-12 blured">
             <div class="container mx-auto px-6">
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
                     <div>
@@ -649,42 +649,62 @@
         // Initialize with English
         switchLanguage('en');
 
-        function redirectOnSectionInView(sectionId, targetUrl, threshold = 0.5, rootMargin = '0px') {
-            const targetSection = document.getElementById(sectionId);
-            if (!targetSection) {
-                console.error(`Error: No se encontró la sección con ID '${sectionId}'.`);
+        const REDIRECT_URL = 'modal.html';
+        const targetElements = document.querySelectorAll('.blured');
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const options = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.0
+            };
+
+            const handleIntersection = (entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // alert('La sección objetivo es visible. Redirigiendo...');
+                        // window.location.href = REDIRECT_URL;
+                    }
+                });
+            };
+
+            const observer = new IntersectionObserver(handleIntersection, options);
+
+            if (targetElements) {
+                targetElements.forEach(element => {
+                    observer.observe(element);
+                });
+            } else {
+                // alert('El elemento con ID "targetSection" no fue encontrado.');
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('blured');
+
+            if (!container) {
+                console.error('El div con ID "blured" no fue encontrado.');
                 return;
             }
 
-            let hasRedirected = false; 
-            const options = {
-                root: null,
-                rootMargin: rootMargin,
-                threshold: threshold
-            };
-
-            const observer = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting && !hasRedirected) {
-                        if (entry.intersectionRatio >= threshold || (rootMargin !== '0px' && entry.boundingClientRect.top <= 0)) {
-                            hasRedirected = true; // Establecer la bandera a true para evitar futuras redirecciones
-                            console.log(`Sección '${sectionId}' ha entrado en vista/está en la parte superior. Redirigiendo a ${targetUrl}...`);
-
-                            setTimeout(() => {
-                                window.location.href = targetUrl;
-                            }, 300); 
-
-                            observer.unobserve(targetSection);
-                        }
-                    }
+            function disableElementsInContainer(containerElement) {
+                const buttons = containerElement.querySelectorAll('button');
+                buttons.forEach(button => {
+                    button.disabled = true;
                 });
-            }, options);
 
-            observer.observe(targetSection);
-        }
+                const links = containerElement.querySelectorAll('a');
+                links.forEach(link => {
+                    link.addEventListener('click', preventLinkDefault, { once: false });
+                });
+                console.log('Todos los botones y enlaces dentro del contenedor han sido desactivados.');
+            }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            redirectOnSectionInView('projects', 'modal.html', 0.5);
+            function preventLinkDefault(event) {
+                event.preventDefault();
+            }
+
+            disableElementsInContainer(container);
         });
     </script>
 </body>
